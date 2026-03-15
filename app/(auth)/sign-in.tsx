@@ -1,0 +1,134 @@
+import { Button } from "@/src/components/Button";
+import { Input } from "@/src/components/Input";
+import { SocialButton } from "@/src/components/SocialButton";
+import { COLORS } from "@/src/constants/colors";
+import { Link } from "expo-router";
+import React, { useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+export default function SignInScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleSignIn() {
+    if (!email || !password) {
+      Alert.alert("Erro", "Preencha todos os campos.");
+      return;
+    }
+
+    // TODO: integrar com backend
+    Alert.alert("Sucesso", "Login realizado com sucesso!");
+  }
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Título */}
+        <Text style={styles.brand}>TrainEasy</Text>
+
+        {/* Subtítulo */}
+        <Text style={styles.title}>Entre em sua conta</Text>
+
+        {/* Formulário */}
+        <View style={styles.form}>
+          <Input
+            placeholder="E-mail*"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+
+          <Input
+            placeholder="Password*"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+
+        {/* Botão Entrar */}
+        <Button title="Entrar" onPress={handleSignIn} />
+
+        {/* Link para Cadastro */}
+        <View style={styles.signUpContainer}>
+          <Text style={styles.signUpText}>Você não tem uma conta? </Text>
+          <Link href="/(auth)/sign-up" style={styles.signUpLink}>
+            Cadastre-se
+          </Link>
+        </View>
+
+        {/* Ícones Sociais */}
+        <View style={styles.socialContainer}>
+          <SocialButton icon="google" />
+          <SocialButton icon="facebook" />
+          <SocialButton icon="phone" />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingTop: 60,
+    paddingBottom: 40,
+  },
+  brand: {
+    fontSize: 45,
+    fontWeight: "800",
+    color: COLORS.primary,
+    textAlign: "left",
+  },
+  title: {
+    fontSize: 33,
+    fontWeight: "700",
+    color: COLORS.black,
+    marginTop: 56,
+    textAlign: "left",
+  },
+  form: {
+    marginTop: 24,
+    marginBottom: 40,
+    gap: 16,
+  },
+  signUpContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  signUpText: {
+    fontSize: 15,
+    color: COLORS.gray,
+  },
+  signUpLink: {
+    fontSize: 15,
+    color: COLORS.link,
+    fontWeight: "600",
+  },
+  socialContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 20,
+    marginTop: 60,
+  },
+});
