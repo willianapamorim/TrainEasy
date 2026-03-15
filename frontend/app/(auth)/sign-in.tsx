@@ -2,7 +2,8 @@ import { Button } from "@/src/components/Button";
 import { Input } from "@/src/components/Input";
 import { SocialButton } from "@/src/components/SocialButton";
 import { COLORS } from "@/src/constants/colors";
-import { Link } from "expo-router";
+import { loginUser } from "@/src/services/authService";
+import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -14,25 +15,28 @@ import {
   View,
 } from "react-native";
 
-export default function SignUpScreen() {
-  const [name, setName] = useState("");
+export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const router = useRouter();
 
-  function handleSignUp() {
-    if (!name || !email || !password || !repeatPassword) {
+  async function handleSignIn() {
+    if (!email || !password) {
       Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
 
-    if (password !== repeatPassword) {
-      Alert.alert("Erro", "As senhas não coincidem.");
-      return;
-    }
+    try {
+      const response = await loginUser({ email, senha: password });
 
-    // TODO: integrar com backend
-    Alert.alert("Sucesso", "Conta criada com sucesso!");
+      if (response.success) {
+        router.replace("/(tabs)/home");
+      } else {
+        Alert.alert("Erro", response.message);
+      }
+    } catch {
+      Alert.alert("Erro", "Não foi possível conectar ao servidor.");
+    }
   }
 
   return (
@@ -49,12 +53,10 @@ export default function SignUpScreen() {
         <Text style={styles.brand}>TrainEasy</Text>
 
         {/* Subtítulo */}
-        <Text style={styles.title}>Crie sua conta aqui</Text>
+        <Text style={styles.title}>Entre em sua conta</Text>
 
         {/* Formulário */}
         <View style={styles.form}>
-          <Input placeholder="Nome*" value={name} onChangeText={setName} />
-
           <Input
             placeholder="E-mail*"
             keyboardType="email-address"
@@ -68,36 +70,16 @@ export default function SignUpScreen() {
             value={password}
             onChangeText={setPassword}
           />
-
-          <Input
-            placeholder="Repeat Password*"
-            secureTextEntry
-            value={repeatPassword}
-            onChangeText={setRepeatPassword}
-          />
         </View>
 
-        {/* Política de Privacidade */}
-        <Text style={styles.policyText}>
-          Ao se cadastrar neste aplicativo, você também concorda com nossos{" "}
-          <Text style={styles.link} onPress={() => {}}>
-            Termos de Serviço
-          </Text>{" "}
-          e{" "}
-          <Text style={styles.link} onPress={() => {}}>
-            Política de Privacidade
-          </Text>
-          .
-        </Text>
+        {/* Botão Entrar */}
+        <Button title="Entrar" onPress={handleSignIn} />
 
-        {/* Botão Cadastrar */}
-        <Button title="Cadastre-se" onPress={handleSignUp} />
-
-        {/* Link para Login */}
-        <View style={styles.loginContainer}>
-          <Text style={styles.loginText}>Você já tem uma conta? </Text>
-          <Link href="/(auth)/sign-in" style={styles.loginLink}>
-            Fazer Login
+        {/* Link para Cadastro */}
+        <View style={styles.signUpContainer}>
+          <Text style={styles.signUpText}>Você não tem uma conta? </Text>
+          <Link href="/(auth)/sign-up" style={styles.signUpLink}>
+            Cadastre-se
           </Link>
         </View>
 
@@ -138,28 +120,18 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 24,
+    marginBottom: 40,
     gap: 16,
   },
-  policyText: {
-    fontSize: 15,
-    color: COLORS.gray,
-    lineHeight: 20,
-    marginTop: 40,
-    marginBottom: 24,
-  },
-  link: {
-    color: COLORS.link,
-    textDecorationLine: "underline",
-  },
-  loginContainer: {
+  signUpContainer: {
     flexDirection: "row",
     marginTop: 20,
   },
-  loginText: {
+  signUpText: {
     fontSize: 15,
     color: COLORS.gray,
   },
-  loginLink: {
+  signUpLink: {
     fontSize: 15,
     color: COLORS.link,
     fontWeight: "600",
