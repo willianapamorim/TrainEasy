@@ -1,0 +1,36 @@
+#!/bin/sh
+# Maven Wrapper script for Unix/Linux/macOS
+# Automatically downloads Maven if not present
+
+set -e
+
+MAVEN_WRAPPER_PROPERTIES=".mvn/wrapper/maven-wrapper.properties"
+
+if [ -f "$MAVEN_WRAPPER_PROPERTIES" ]; then
+    distributionUrl=$(grep "distributionUrl" "$MAVEN_WRAPPER_PROPERTIES" | cut -d'=' -f2-)
+fi
+
+MAVEN_HOME="${HOME}/.m2/wrapper/dists/apache-maven-3.9.6"
+MAVEN_CMD="${MAVEN_HOME}/bin/mvn"
+
+if [ ! -f "$MAVEN_CMD" ]; then
+    echo "Downloading Maven..."
+    mkdir -p "$MAVEN_HOME"
+    TMPFILE=$(mktemp /tmp/maven-XXXXXX.zip)
+    if command -v curl > /dev/null 2>&1; then
+        curl -fsSL -o "$TMPFILE" "$distributionUrl"
+    elif command -v wget > /dev/null 2>&1; then
+        wget -q -O "$TMPFILE" "$distributionUrl"
+    else
+        echo "Error: curl or wget required"
+        exit 1
+    fi
+    unzip -q -o "$TMPFILE" -d "${HOME}/.m2/wrapper/dists/"
+    rm -f "$TMPFILE"
+    # Handle nested directory from zip
+    if [ -d "${HOME}/.m2/wrapper/dists/apache-maven-3.9.6" ]; then
+        MAVEN_CMD="${HOME}/.m2/wrapper/dists/apache-maven-3.9.6/bin/mvn"
+    fi
+fi
+
+exec "$MAVEN_CMD" "$@"
