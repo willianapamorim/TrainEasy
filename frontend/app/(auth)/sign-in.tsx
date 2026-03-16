@@ -3,6 +3,7 @@ import { Input } from "@/src/components/Input";
 import { SocialButton } from "@/src/components/SocialButton";
 import { COLORS } from "@/src/constants/colors";
 import { loginUser } from "@/src/services/authService";
+import { saveUser } from "@/src/services/storage";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -29,7 +30,8 @@ export default function SignInScreen() {
     try {
       const response = await loginUser({ email, senha: password });
 
-      if (response.success) {
+      if (response.success && response.user) {
+        await saveUser(response.user);
         router.replace("/(tabs)/home");
       } else {
         Alert.alert("Erro", response.message);
