@@ -1,9 +1,10 @@
 package com.traineasy.repository;
 
-import com.traineasy.entity.Treino;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.traineasy.entity.Treino;
 
 public interface TreinoRepository extends JpaRepository<Treino, Long> {
 

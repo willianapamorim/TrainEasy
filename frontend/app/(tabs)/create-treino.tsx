@@ -32,50 +32,30 @@ export default function CreateTreinoScreen() {
 
         <TouchableOpacity
           style={styles.optionCard}
-          onPress={() =>
-            router.push("/(tabs)/predefined-treinos" as never)
-          }
+          onPress={() => router.push("/(tabs)/predefined-treinos" as never)}
         >
-          <MaterialIcons
-            name="list-alt"
-            size={40}
-            color={COLORS.primary}
-          />
+          <MaterialIcons name="list-alt" size={40} color={COLORS.primary} />
           <View style={styles.optionInfo}>
             <Text style={styles.optionTitle}>Treino Pré-definido</Text>
             <Text style={styles.optionDesc}>
               Escolha entre divisões de treino prontas para usar.
             </Text>
           </View>
-          <MaterialIcons
-            name="chevron-right"
-            size={28}
-            color={COLORS.icon}
-          />
+          <MaterialIcons name="chevron-right" size={28} color={COLORS.icon} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.optionCard}
-          onPress={() =>
-            router.push("/(tabs)/custom-treino" as never)
-          }
+          onPress={() => router.push("/(tabs)/custom-treino" as never)}
         >
-          <MaterialIcons
-            name="edit-note"
-            size={40}
-            color={COLORS.primary}
-          />
+          <MaterialIcons name="edit-note" size={40} color={COLORS.primary} />
           <View style={styles.optionInfo}>
             <Text style={styles.optionTitle}>Treino Personalizado</Text>
             <Text style={styles.optionDesc}>
               Crie um programa com o nome que preferir.
             </Text>
           </View>
-          <MaterialIcons
-            name="chevron-right"
-            size={28}
-            color={COLORS.icon}
-          />
+          <MaterialIcons name="chevron-right" size={28} color={COLORS.icon} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

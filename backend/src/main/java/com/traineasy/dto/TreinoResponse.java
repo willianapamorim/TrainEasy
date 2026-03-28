@@ -1,21 +1,27 @@
 package com.traineasy.dto;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class TreinoResponse {
 
-    private boolean success;
-    private String message;
-    private TreinoData treino;
-    private List<TreinoData> treinos;
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class TreinoData {
+        private Long id;
+        private String nome;
+        private String tipo;
+        private Long userId;
+        private LocalDateTime createdAt;
+    }
 
     public static TreinoResponse success(String message, TreinoData treino) {
         return new TreinoResponse(true, message, treino, null);
@@ -29,14 +35,11 @@ public class TreinoResponse {
         return new TreinoResponse(false, message, null, null);
     }
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class TreinoData {
-        private Long id;
-        private String nome;
-        private String tipo;
-        private Long userId;
-        private LocalDateTime createdAt;
-    }
+    private boolean success;
+
+    private String message;
+
+    private TreinoData treino;
+
+    private List<TreinoData> treinos;
 }

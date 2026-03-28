@@ -44,45 +44,34 @@ export default function HomeScreen() {
   }
 
   function handleDeleteTreino(treino: TreinoData) {
-    Alert.alert(
-      "Excluir Treino",
-      `Deseja excluir "${treino.nome}"?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Excluir",
-          style: "destructive",
-          onPress: async () => {
-            const response = await deleteTreino(treino.id);
-            if (response.success) {
-              setTreinos((prev) => prev.filter((t) => t.id !== treino.id));
-            } else {
-              Alert.alert("Erro", response.message);
-            }
-          },
+    Alert.alert("Excluir Treino", `Deseja excluir "${treino.nome}"?`, [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Excluir",
+        style: "destructive",
+        onPress: async () => {
+          const response = await deleteTreino(treino.id);
+          if (response.success) {
+            setTreinos((prev) => prev.filter((t) => t.id !== treino.id));
+          } else {
+            Alert.alert("Erro", response.message);
+          }
         },
-      ],
-    );
+      },
+    ]);
   }
 
   function renderTreinoItem({ item }: { item: TreinoData }) {
     return (
       <View style={styles.treinoCard}>
-        <MaterialIcons
-          name="fitness-center"
-          size={28}
-          color={COLORS.primary}
-        />
+        <MaterialIcons name="fitness-center" size={28} color={COLORS.primary} />
         <View style={styles.treinoInfo}>
           <Text style={styles.treinoNome}>{item.nome}</Text>
           <Text style={styles.treinoTipo}>
             {item.tipo === "PREDEFINIDO" ? "Pré-definido" : "Personalizado"}
           </Text>
         </View>
-        <TouchableOpacity
-          onPress={() => handleDeleteTreino(item)}
-          hitSlop={10}
-        >
+        <TouchableOpacity onPress={() => handleDeleteTreino(item)} hitSlop={10}>
           <MaterialIcons name="delete-outline" size={22} color={COLORS.icon} />
         </TouchableOpacity>
       </View>

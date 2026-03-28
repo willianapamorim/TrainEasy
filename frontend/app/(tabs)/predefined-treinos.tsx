@@ -111,11 +111,7 @@ export default function PredefinedTreinosScreen() {
               <Text style={styles.cardTitle}>{item.nome}</Text>
               <Text style={styles.cardDesc}>{item.desc}</Text>
             </View>
-            <MaterialIcons
-              name="chevron-right"
-              size={24}
-              color={COLORS.icon}
-            />
+            <MaterialIcons name="chevron-right" size={24} color={COLORS.icon} />
           </TouchableOpacity>
         ))}
       </ScrollView>

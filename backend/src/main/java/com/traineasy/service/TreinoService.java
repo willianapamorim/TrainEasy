@@ -1,12 +1,13 @@
 package com.traineasy.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.traineasy.dto.CreateTreinoRequest;
 import com.traineasy.dto.TreinoResponse;
 import com.traineasy.entity.Treino;
 import com.traineasy.repository.TreinoRepository;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TreinoService {

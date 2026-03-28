@@ -37,9 +37,7 @@ export async function getTreinosByUser(
   userId: number,
 ): Promise<TreinoResponse> {
   try {
-    const { data } = await api.get<TreinoResponse>(
-      `/treinos/user/${userId}`,
-    );
+    const { data } = await api.get<TreinoResponse>(`/treinos/user/${userId}`);
     return data;
   } catch (error) {
     return handleApiError(error);

@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["jdk17", "maven"]
+
+[phases.build]
+cmds = ["cd backend && mvn clean package -DskipTests"]
+
+[start]
+cmd = "java -jar backend/target/traineasy-api-1.0.0.jar"
