@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -43,22 +44,29 @@ export default function HomeScreen() {
     setLoading(false);
   }
 
+  async function performDelete(treino: TreinoData) {
+    const response = await deleteTreino(treino.id);
+    if (response.success) {
+      setTreinos((prev) => prev.filter((t) => t.id !== treino.id));
+    } else {
+      Alert.alert("Erro", response.message);
+    }
+  }
+
   function handleDeleteTreino(treino: TreinoData) {
-    Alert.alert("Excluir Treino", `Deseja excluir "${treino.nome}"?`, [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Excluir",
-        style: "destructive",
-        onPress: async () => {
-          const response = await deleteTreino(treino.id);
-          if (response.success) {
-            setTreinos((prev) => prev.filter((t) => t.id !== treino.id));
-          } else {
-            Alert.alert("Erro", response.message);
-          }
+    if (Platform.OS === "web") {
+      const confirmed = window.confirm(`Deseja excluir "${treino.nome}"?`);
+      if (confirmed) performDelete(treino);
+    } else {
+      Alert.alert("Excluir Treino", `Deseja excluir "${treino.nome}"?`, [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => performDelete(treino),
         },
-      },
-    ]);
+      ]);
+    }
   }
 
   function renderTreinoItem({ item }: { item: TreinoData }) {
@@ -92,7 +100,11 @@ export default function HomeScreen() {
       </View>
 
       {/* Conteúdo principal */}
-      <View style={styles.content}>
+      <View
+        style={
+          treinos.length === 0 || loading ? styles.contentEmpty : styles.content
+        }
+      >
         {loading ? (
           <ActivityIndicator size="large" color={COLORS.primary} />
         ) : treinos.length === 0 ? (
@@ -176,6 +188,10 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   content: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+  contentEmpty: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

@@ -43,9 +43,17 @@ export default function CustomTreinoScreen() {
     setSaving(false);
 
     if (response.success) {
-      Alert.alert("Sucesso", "Treino criado com sucesso!", [
-        { text: "OK", onPress: () => router.replace("/(tabs)/home" as never) },
-      ]);
+      if (Platform.OS === "web") {
+        window.alert("Treino criado com sucesso!");
+        router.replace("/(tabs)/home" as never);
+      } else {
+        Alert.alert("Sucesso", "Treino criado com sucesso!", [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(tabs)/home" as never),
+          },
+        ]);
+      }
     } else {
       Alert.alert("Erro", response.message);
     }
