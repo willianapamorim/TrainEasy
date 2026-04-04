@@ -3,6 +3,10 @@ package com.traineasy.service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,10 +27,15 @@ import com.traineasy.repository.UserRepository;
 @Service
 public class AuthService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
+
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
     private final SecureRandom secureRandom = new SecureRandom();
+
+    @Value("${spring.mail.username:}")
+    private String mailFrom;
 
     public AuthService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
             JavaMailSender mailSender) {
@@ -77,6 +86,7 @@ public class AuthService {
         userRepository.save(user);
 
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(mailFrom);
         message.setTo(user.getEmail());
         message.setSubject("TrainEasy - Código de recuperação de senha");
         message.setText("Olá " + user.getNome() + ",\n\n"
@@ -84,7 +94,13 @@ public class AuthService {
                 + "Este código expira em 15 minutos.\n\n"
                 + "Se você não solicitou a recuperação, ignore este e-mail.\n\n"
                 + "Equipe TrainEasy");
-        mailSender.send(message);
+
+        try {
+            mailSender.send(message);
+        } catch (MailException e) {
+            log.error("Erro ao enviar email de recuperação: {}", e.getMessage(), e);
+            return AuthResponse.error("Falha ao enviar e-mail. Tente novamente mais tarde.");
+        }
 
         return AuthResponse.success("Código de recuperação enviado para o e-mail.", null);
     }
