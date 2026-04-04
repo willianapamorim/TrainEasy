@@ -69,9 +69,20 @@ export default function HomeScreen() {
     }
   }
 
+  function handleOpenTreino(treino: TreinoData) {
+    router.push({
+      pathname: "/(tabs)/treino-details",
+      params: { treinoId: String(treino.id) },
+    } as never);
+  }
+
   function renderTreinoItem({ item }: { item: TreinoData }) {
     return (
-      <View style={styles.treinoCard}>
+      <TouchableOpacity
+        style={styles.treinoCard}
+        onPress={() => handleOpenTreino(item)}
+        activeOpacity={0.7}
+      >
         <MaterialIcons name="fitness-center" size={28} color={COLORS.primary} />
         <View style={styles.treinoInfo}>
           <Text style={styles.treinoNome}>{item.nome}</Text>
@@ -82,7 +93,7 @@ export default function HomeScreen() {
         <TouchableOpacity onPress={() => handleDeleteTreino(item)} hitSlop={10}>
           <MaterialIcons name="delete-outline" size={22} color={COLORS.icon} />
         </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     );
   }
 

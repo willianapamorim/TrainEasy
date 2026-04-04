@@ -1,6 +1,6 @@
 import { COLORS } from "@/src/constants/colors";
 import { getStoredUser } from "@/src/services/storage";
-import { createTreino } from "@/src/services/treinoService";
+import { createTreinoCompleto } from "@/src/services/treinoService";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -16,30 +16,241 @@ import {
   View,
 } from "react-native";
 
-const PREDEFINED_TREINOS = [
+interface PredefinedDivisao {
+  nome: string;
+  exercicios: string[];
+}
+
+interface PredefinedTreino {
+  nome: string;
+  desc: string;
+  divisoes: PredefinedDivisao[];
+}
+
+const PREDEFINED_TREINOS: PredefinedTreino[] = [
   {
     nome: "Treino ABC",
     desc: "Divisão em 3 dias — ideal para intermediários.",
+    divisoes: [
+      {
+        nome: "Treino A - Peito/Tríceps",
+        exercicios: [
+          "Supino Reto",
+          "Supino Inclinado",
+          "Crucifixo",
+          "Crossover",
+          "Tríceps Pulley",
+          "Tríceps Testa",
+        ],
+      },
+      {
+        nome: "Treino B - Costas/Bíceps",
+        exercicios: [
+          "Puxada Frontal",
+          "Remada Curvada",
+          "Remada Baixa",
+          "Pulldown",
+          "Rosca Direta",
+          "Rosca Martelo",
+        ],
+      },
+      {
+        nome: "Treino C - Pernas/Ombros",
+        exercicios: [
+          "Agachamento Livre",
+          "Leg Press",
+          "Cadeira Extensora",
+          "Mesa Flexora",
+          "Elevação Lateral",
+          "Desenvolvimento com Halteres",
+        ],
+      },
+    ],
   },
   {
     nome: "Treino ABCD",
     desc: "Divisão em 4 dias — maior volume por grupo muscular.",
+    divisoes: [
+      {
+        nome: "Treino A - Peito",
+        exercicios: [
+          "Supino Reto",
+          "Supino Inclinado",
+          "Supino Declinado",
+          "Crucifixo",
+          "Crossover",
+        ],
+      },
+      {
+        nome: "Treino B - Costas",
+        exercicios: [
+          "Puxada Frontal",
+          "Remada Curvada",
+          "Remada Unilateral",
+          "Remada Baixa",
+          "Barra Fixa",
+        ],
+      },
+      {
+        nome: "Treino C - Pernas",
+        exercicios: [
+          "Agachamento Livre",
+          "Leg Press",
+          "Cadeira Extensora",
+          "Mesa Flexora",
+          "Panturrilha em Pé",
+        ],
+      },
+      {
+        nome: "Treino D - Ombros/Braços",
+        exercicios: [
+          "Desenvolvimento Militar",
+          "Elevação Lateral",
+          "Rosca Direta",
+          "Rosca Martelo",
+          "Tríceps Pulley",
+          "Tríceps Francês",
+        ],
+      },
+    ],
   },
   {
     nome: "Treino ABCDE",
     desc: "Divisão em 5 dias — um grupo muscular por dia.",
+    divisoes: [
+      {
+        nome: "Treino A - Peito",
+        exercicios: [
+          "Supino Reto",
+          "Supino Inclinado",
+          "Crucifixo",
+          "Crossover",
+          "Fly na Máquina",
+        ],
+      },
+      {
+        nome: "Treino B - Costas",
+        exercicios: [
+          "Puxada Frontal",
+          "Remada Curvada",
+          "Remada Baixa",
+          "Pulldown",
+          "Barra Fixa",
+        ],
+      },
+      {
+        nome: "Treino C - Ombros",
+        exercicios: [
+          "Desenvolvimento Militar",
+          "Elevação Lateral",
+          "Elevação Frontal",
+          "Crucifixo Inverso",
+          "Encolhimento",
+        ],
+      },
+      {
+        nome: "Treino D - Braços",
+        exercicios: [
+          "Rosca Direta",
+          "Rosca Martelo",
+          "Rosca Scott",
+          "Tríceps Pulley",
+          "Tríceps Testa",
+          "Mergulho",
+        ],
+      },
+      {
+        nome: "Treino E - Pernas",
+        exercicios: [
+          "Agachamento Livre",
+          "Leg Press",
+          "Cadeira Extensora",
+          "Mesa Flexora",
+          "Stiff",
+          "Panturrilha em Pé",
+        ],
+      },
+    ],
   },
   {
     nome: "Push / Pull / Legs",
     desc: "Empurrar, puxar e pernas — 3 ou 6 dias por semana.",
+    divisoes: [
+      {
+        nome: "Push - Empurrar",
+        exercicios: [
+          "Supino Reto",
+          "Supino Inclinado",
+          "Desenvolvimento Militar",
+          "Elevação Lateral",
+          "Tríceps Pulley",
+        ],
+      },
+      {
+        nome: "Pull - Puxar",
+        exercicios: [
+          "Puxada Frontal",
+          "Remada Curvada",
+          "Remada Baixa",
+          "Rosca Direta",
+          "Rosca Martelo",
+        ],
+      },
+      {
+        nome: "Legs - Pernas",
+        exercicios: [
+          "Agachamento Livre",
+          "Leg Press",
+          "Cadeira Extensora",
+          "Mesa Flexora",
+          "Panturrilha em Pé",
+        ],
+      },
+    ],
   },
   {
     nome: "Upper / Lower",
     desc: "Superior e inferior — 4 dias por semana.",
+    divisoes: [
+      {
+        nome: "Upper - Superior",
+        exercicios: [
+          "Supino Reto",
+          "Puxada Frontal",
+          "Desenvolvimento Militar",
+          "Rosca Direta",
+          "Tríceps Pulley",
+        ],
+      },
+      {
+        nome: "Lower - Inferior",
+        exercicios: [
+          "Agachamento Livre",
+          "Leg Press",
+          "Cadeira Extensora",
+          "Mesa Flexora",
+          "Panturrilha em Pé",
+        ],
+      },
+    ],
   },
   {
     nome: "Full Body",
     desc: "Corpo inteiro — 2 a 3 dias por semana.",
+    divisoes: [
+      {
+        nome: "Full Body",
+        exercicios: [
+          "Agachamento Livre",
+          "Supino Reto",
+          "Puxada Frontal",
+          "Desenvolvimento Militar",
+          "Rosca Direta",
+          "Tríceps Pulley",
+          "Abdominal Crunch",
+        ],
+      },
+    ],
   },
 ];
 
@@ -47,7 +258,7 @@ export default function PredefinedTreinosScreen() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
 
-  async function handleSelect(nome: string) {
+  async function handleSelect(treino: PredefinedTreino) {
     const user = await getStoredUser();
     if (!user) {
       router.replace("/(auth)/sign-in");
@@ -55,10 +266,14 @@ export default function PredefinedTreinosScreen() {
     }
 
     setSaving(true);
-    const response = await createTreino({
-      nome,
+    const response = await createTreinoCompleto({
+      nome: treino.nome,
       tipo: "PREDEFINIDO",
       userId: user.id,
+      divisoes: treino.divisoes.map((d) => ({
+        nome: d.nome,
+        exercicios: d.exercicios,
+      })),
     });
     setSaving(false);
 
@@ -108,7 +323,7 @@ export default function PredefinedTreinosScreen() {
           <TouchableOpacity
             key={item.nome}
             style={styles.card}
-            onPress={() => handleSelect(item.nome)}
+            onPress={() => handleSelect(item)}
             disabled={saving}
           >
             <MaterialIcons
@@ -119,6 +334,9 @@ export default function PredefinedTreinosScreen() {
             <View style={styles.cardInfo}>
               <Text style={styles.cardTitle}>{item.nome}</Text>
               <Text style={styles.cardDesc}>{item.desc}</Text>
+              <Text style={styles.cardDivisoes}>
+                {item.divisoes.length} divisão(ões)
+              </Text>
             </View>
             <MaterialIcons name="chevron-right" size={24} color={COLORS.icon} />
           </TouchableOpacity>
@@ -189,5 +407,11 @@ const styles = StyleSheet.create({
   cardDesc: {
     fontSize: 12,
     color: COLORS.icon,
+  },
+  cardDivisoes: {
+    fontSize: 11,
+    color: COLORS.primary,
+    marginTop: 4,
+    fontWeight: "600",
   },
 });
