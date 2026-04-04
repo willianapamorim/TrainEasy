@@ -23,6 +23,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -135,105 +136,121 @@ export default function ProfileScreen() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.primary} />
-          </TouchableOpacity>
-          <Text style={styles.brand}>Meu Perfil</Text>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Text style={styles.logoutText}>Sair</Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
+              <MaterialIcons
+                name="arrow-back"
+                size={24}
+                color={COLORS.primary}
+              />
+            </TouchableOpacity>
+            <Text style={styles.brand}>Meu Perfil</Text>
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={styles.logoutButton}
+            >
+              <Text style={styles.logoutText}>Sair</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* Saudação */}
-        <Text style={styles.greeting}>Olá, {user?.nome}!</Text>
-        <Text style={styles.subtitle}>Gerencie sua conta</Text>
+          {/* Saudação */}
+          <Text style={styles.greeting}>Olá, {user?.nome}!</Text>
+          <Text style={styles.subtitle}>Gerencie sua conta</Text>
 
-        {/* Card de perfil */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Seus Dados</Text>
+          {/* Card de perfil */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Seus Dados</Text>
 
-          {!editing ? (
-            <>
-              <View style={styles.infoRow}>
-                <Text style={styles.label}>Nome</Text>
-                <Text style={styles.value}>{user?.nome}</Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.label}>E-mail</Text>
-                <Text style={styles.value}>{user?.email}</Text>
-              </View>
+            {!editing ? (
+              <>
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>Nome</Text>
+                  <Text style={styles.value}>{user?.nome}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                  <Text style={styles.label}>E-mail</Text>
+                  <Text style={styles.value}>{user?.email}</Text>
+                </View>
 
-              <Button title="Editar Dados" onPress={() => setEditing(true)} />
-            </>
-          ) : (
-            <>
-              <View style={styles.form}>
-                <Input placeholder="Nome" value={nome} onChangeText={setNome} />
-                <Input
-                  placeholder="E-mail"
-                  keyboardType="email-address"
-                  value={email}
-                  onChangeText={setEmail}
-                />
-                <Input
-                  placeholder="Nova senha (opcional)"
-                  secureTextEntry
-                  value={senha}
-                  onChangeText={setSenha}
-                />
-              </View>
+                <Button title="Editar Dados" onPress={() => setEditing(true)} />
+              </>
+            ) : (
+              <>
+                <View style={styles.form}>
+                  <Input
+                    placeholder="Nome"
+                    value={nome}
+                    onChangeText={setNome}
+                  />
+                  <Input
+                    placeholder="E-mail"
+                    keyboardType="email-address"
+                    value={email}
+                    onChangeText={setEmail}
+                  />
+                  <Input
+                    placeholder="Nova senha (opcional)"
+                    secureTextEntry
+                    value={senha}
+                    onChangeText={setSenha}
+                  />
+                </View>
 
-              <View style={styles.editButtons}>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={() => {
-                    setNome(user?.nome ?? "");
-                    setEmail(user?.email ?? "");
-                    setSenha("");
-                    setEditing(false);
-                  }}
-                >
-                  <Text style={styles.cancelButtonText}>Cancelar</Text>
-                </TouchableOpacity>
+                <View style={styles.editButtons}>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => {
+                      setNome(user?.nome ?? "");
+                      setEmail(user?.email ?? "");
+                      setSenha("");
+                      setEditing(false);
+                    }}
+                  >
+                    <Text style={styles.cancelButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={[styles.saveButton, saving && styles.disabledButton]}
-                  onPress={handleUpdate}
-                  disabled={saving}
-                >
-                  <Text style={styles.saveButtonText}>
-                    {saving ? "Salvando..." : "Salvar"}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
-        </View>
+                  <TouchableOpacity
+                    style={[styles.saveButton, saving && styles.disabledButton]}
+                    onPress={handleUpdate}
+                    disabled={saving}
+                  >
+                    <Text style={styles.saveButtonText}>
+                      {saving ? "Salvando..." : "Salvar"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
 
-        {/* Zona de perigo */}
-        <View style={styles.dangerZone}>
-          <Text style={styles.dangerTitle}>Zona de Perigo</Text>
-          <Text style={styles.dangerDescription}>
-            Ao excluir sua conta, todos os seus dados serão removidos
-            permanentemente.
-          </Text>
-          <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-            <Text style={styles.deleteButtonText}>Excluir Conta</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          {/* Zona de perigo */}
+          <View style={styles.dangerZone}>
+            <Text style={styles.dangerTitle}>Zona de Perigo</Text>
+            <Text style={styles.dangerDescription}>
+              Ao excluir sua conta, todos os seus dados serão removidos
+              permanentemente.
+            </Text>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={handleDelete}
+            >
+              <Text style={styles.deleteButtonText}>Excluir Conta</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -251,7 +268,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 16,
     paddingBottom: 40,
   },
   header: {

@@ -22,6 +22,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/image.png",
         "backgroundColor": "#7C3AED"
+      },
+      "navigationBar": {
+        "visible": "sticky-immersive"
       }
     },
     "web": {

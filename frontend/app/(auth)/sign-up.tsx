@@ -15,6 +15,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignUpScreen() {
   const [name, setName] = useState("");
@@ -55,79 +56,81 @@ export default function SignUpScreen() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        {/* Título */}
-        <Text style={styles.brand}>TrainEasy</Text>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Título */}
+          <Text style={styles.brand}>TrainEasy</Text>
 
-        {/* Subtítulo */}
-        <Text style={styles.title}>Crie sua conta aqui</Text>
+          {/* Subtítulo */}
+          <Text style={styles.title}>Crie sua conta aqui</Text>
 
-        {/* Formulário */}
-        <View style={styles.form}>
-          <Input placeholder="Nome*" value={name} onChangeText={setName} />
+          {/* Formulário */}
+          <View style={styles.form}>
+            <Input placeholder="Nome*" value={name} onChangeText={setName} />
 
-          <Input
-            placeholder="E-mail*"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
+            <Input
+              placeholder="E-mail*"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+            />
 
-          <Input
-            placeholder="Password*"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+            <Input
+              placeholder="Password*"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
 
-          <Input
-            placeholder="Repeat Password*"
-            secureTextEntry
-            value={repeatPassword}
-            onChangeText={setRepeatPassword}
-          />
-        </View>
+            <Input
+              placeholder="Repeat Password*"
+              secureTextEntry
+              value={repeatPassword}
+              onChangeText={setRepeatPassword}
+            />
+          </View>
 
-        {/* Política de Privacidade */}
-        <Text style={styles.policyText}>
-          Ao se cadastrar neste aplicativo, você também concorda com nossos{" "}
-          <Text style={styles.link} onPress={() => {}}>
-            Termos de Serviço
-          </Text>{" "}
-          e{" "}
-          <Text style={styles.link} onPress={() => {}}>
-            Política de Privacidade
+          {/* Política de Privacidade */}
+          <Text style={styles.policyText}>
+            Ao se cadastrar neste aplicativo, você também concorda com nossos{" "}
+            <Text style={styles.link} onPress={() => {}}>
+              Termos de Serviço
+            </Text>{" "}
+            e{" "}
+            <Text style={styles.link} onPress={() => {}}>
+              Política de Privacidade
+            </Text>
+            .
           </Text>
-          .
-        </Text>
 
-        {/* Botão Cadastrar */}
-        <Button title="Cadastre-se" onPress={handleSignUp} />
+          {/* Botão Cadastrar */}
+          <Button title="Cadastre-se" onPress={handleSignUp} />
 
-        {/* Link para Login */}
-        <View style={styles.loginContainer}>
-          <Text style={styles.loginText}>Você já tem uma conta? </Text>
-          <Link href="/(auth)/sign-in" style={styles.loginLink}>
-            Fazer Login
-          </Link>
-        </View>
+          {/* Link para Login */}
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Você já tem uma conta? </Text>
+            <Link href="/(auth)/sign-in" style={styles.loginLink}>
+              Fazer Login
+            </Link>
+          </View>
 
-        {/* Ícones Sociais */}
-        <View style={styles.socialContainer}>
-          <SocialButton icon="google" />
-          <SocialButton icon="facebook" />
-          <SocialButton icon="phone" />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          {/* Ícones Sociais */}
+          <View style={styles.socialContainer}>
+            <SocialButton icon="google" />
+            <SocialButton icon="facebook" />
+            <SocialButton icon="phone" />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -139,7 +142,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 20,
     paddingBottom: 40,
   },
   brand: {

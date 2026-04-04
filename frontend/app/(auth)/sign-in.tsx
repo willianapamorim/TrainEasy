@@ -15,6 +15,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
@@ -42,61 +43,63 @@ export default function SignInScreen() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        {/* Título */}
-        <Text style={styles.brand}>TrainEasy</Text>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Título */}
+          <Text style={styles.brand}>TrainEasy</Text>
 
-        {/* Subtítulo */}
-        <Text style={styles.title}>Entre em sua conta</Text>
+          {/* Subtítulo */}
+          <Text style={styles.title}>Entre em sua conta</Text>
 
-        {/* Formulário */}
-        <View style={styles.form}>
-          <Input
-            placeholder="E-mail*"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
+          {/* Formulário */}
+          <View style={styles.form}>
+            <Input
+              placeholder="E-mail*"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+            />
 
-          <Input
-            placeholder="Password*"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+            <Input
+              placeholder="Password*"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
 
-          <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
-            Esqueceu a senha?
-          </Link>
-        </View>
+            <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
+              Esqueceu a senha?
+            </Link>
+          </View>
 
-        {/* Botão Entrar */}
-        <Button title="Entrar" onPress={handleSignIn} />
+          {/* Botão Entrar */}
+          <Button title="Entrar" onPress={handleSignIn} />
 
-        {/* Link para Cadastro */}
-        <View style={styles.signUpContainer}>
-          <Text style={styles.signUpText}>Você não tem uma conta? </Text>
-          <Link href="/(auth)/sign-up" style={styles.signUpLink}>
-            Cadastre-se
-          </Link>
-        </View>
+          {/* Link para Cadastro */}
+          <View style={styles.signUpContainer}>
+            <Text style={styles.signUpText}>Você não tem uma conta? </Text>
+            <Link href="/(auth)/sign-up" style={styles.signUpLink}>
+              Cadastre-se
+            </Link>
+          </View>
 
-        {/* Ícones Sociais */}
-        <View style={styles.socialContainer}>
-          <SocialButton icon="google" />
-          <SocialButton icon="facebook" />
-          <SocialButton icon="phone" />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          {/* Ícones Sociais */}
+          <View style={styles.socialContainer}>
+            <SocialButton icon="google" />
+            <SocialButton icon="facebook" />
+            <SocialButton icon="phone" />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 20,
     paddingBottom: 40,
   },
   brand: {

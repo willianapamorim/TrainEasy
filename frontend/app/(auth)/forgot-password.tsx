@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Step = "email" | "code";
 
@@ -82,94 +83,97 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Text style={styles.brand}>TrainEasy</Text>
-        <Text style={styles.title}>Recuperar Senha</Text>
-
-        {step === "email" ? (
-          <>
-            <Text style={styles.description}>
-              Informe o e-mail cadastrado para receber o código de recuperação.
-            </Text>
-
-            <View style={styles.form}>
-              <Input
-                placeholder="E-mail*"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-              />
-            </View>
-
-            <Button
-              title={loading ? "Enviando..." : "Enviar Código"}
-              onPress={handleSendCode}
-              disabled={loading}
-            />
-          </>
-        ) : (
-          <>
-            <Text style={styles.description}>
-              Digite o código de 6 dígitos enviado para {email} e defina sua
-              nova senha.
-            </Text>
-
-            <View style={styles.form}>
-              <Input
-                placeholder="Código de 6 dígitos*"
-                keyboardType="number-pad"
-                value={code}
-                onChangeText={setCode}
-                maxLength={6}
-              />
-
-              <Input
-                placeholder="Nova senha*"
-                secureTextEntry
-                value={novaSenha}
-                onChangeText={setNovaSenha}
-              />
-
-              <Input
-                placeholder="Confirmar nova senha*"
-                secureTextEntry
-                value={confirmarSenha}
-                onChangeText={setConfirmarSenha}
-              />
-            </View>
-
-            <Button
-              title={loading ? "Alterando..." : "Alterar Senha"}
-              onPress={handleResetPassword}
-              disabled={loading}
-            />
-
-            <TouchableOpacity
-              onPress={handleSendCode}
-              style={styles.resendContainer}
-            >
-              <Text style={styles.resendText}>Reenviar código</Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backContainer}
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.backText}>Voltar ao login</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <Text style={styles.brand}>TrainEasy</Text>
+          <Text style={styles.title}>Recuperar Senha</Text>
+
+          {step === "email" ? (
+            <>
+              <Text style={styles.description}>
+                Informe o e-mail cadastrado para receber o código de
+                recuperação.
+              </Text>
+
+              <View style={styles.form}>
+                <Input
+                  placeholder="E-mail*"
+                  keyboardType="email-address"
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <Button
+                title={loading ? "Enviando..." : "Enviar Código"}
+                onPress={handleSendCode}
+                disabled={loading}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={styles.description}>
+                Digite o código de 6 dígitos enviado para {email} e defina sua
+                nova senha.
+              </Text>
+
+              <View style={styles.form}>
+                <Input
+                  placeholder="Código de 6 dígitos*"
+                  keyboardType="number-pad"
+                  value={code}
+                  onChangeText={setCode}
+                  maxLength={6}
+                />
+
+                <Input
+                  placeholder="Nova senha*"
+                  secureTextEntry
+                  value={novaSenha}
+                  onChangeText={setNovaSenha}
+                />
+
+                <Input
+                  placeholder="Confirmar nova senha*"
+                  secureTextEntry
+                  value={confirmarSenha}
+                  onChangeText={setConfirmarSenha}
+                />
+              </View>
+
+              <Button
+                title={loading ? "Alterando..." : "Alterar Senha"}
+                onPress={handleResetPassword}
+                disabled={loading}
+              />
+
+              <TouchableOpacity
+                onPress={handleSendCode}
+                style={styles.resendContainer}
+              >
+                <Text style={styles.resendText}>Reenviar código</Text>
+              </TouchableOpacity>
+            </>
+          )}
+
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backContainer}
+          >
+            <Text style={styles.backText}>Voltar ao login</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -181,7 +185,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: 20,
     paddingBottom: 40,
   },
   brand: {
