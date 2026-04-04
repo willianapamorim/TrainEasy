@@ -12,6 +12,16 @@ interface LoginPayload {
   senha: string;
 }
 
+interface ForgotPasswordPayload {
+  email: string;
+}
+
+interface ResetPasswordPayload {
+  email: string;
+  code: string;
+  novaSenha: string;
+}
+
 export interface AuthResponse {
   success: boolean;
   message: string;
@@ -36,6 +46,34 @@ export async function registerUser(
 export async function loginUser(payload: LoginPayload): Promise<AuthResponse> {
   try {
     const { data } = await api.post<AuthResponse>("/auth/login", payload);
+    return data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function forgotPassword(
+  payload: ForgotPasswordPayload,
+): Promise<AuthResponse> {
+  try {
+    const { data } = await api.post<AuthResponse>(
+      "/auth/forgot-password",
+      payload,
+    );
+    return data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}
+
+export async function resetPassword(
+  payload: ResetPasswordPayload,
+): Promise<AuthResponse> {
+  try {
+    const { data } = await api.post<AuthResponse>(
+      "/auth/reset-password",
+      payload,
+    );
     return data;
   } catch (error) {
     return handleApiError(error);

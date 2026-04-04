@@ -7,10 +7,12 @@ C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\AuthResponse.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\CreateTreinoCompletoRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\CreateTreinoRequest.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\ForgotPasswordRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\LoginRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\RegisterRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\RegistroExercicioRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\RegistroExercicioResponse.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\ResetPasswordRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\TreinoCompletoResponse.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\TreinoResponse.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\UpdateUserRequest.java

@@ -1,11 +1,19 @@
 package com.traineasy.service;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.traineasy.dto.AuthResponse;
+import com.traineasy.dto.ForgotPasswordRequest;
 import com.traineasy.dto.LoginRequest;
 import com.traineasy.dto.RegisterRequest;
+import com.traineasy.dto.ResetPasswordRequest;
 import com.traineasy.entity.User;
 import com.traineasy.exception.EmailAlreadyExistsException;
 import com.traineasy.exception.InvalidPasswordException;
@@ -17,10 +25,14 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JavaMailSender mailSender;
+    private final SecureRandom secureRandom = new SecureRandom();
 
-    public AuthService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+            JavaMailSender mailSender) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailSender = mailSender;
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -51,5 +63,57 @@ public class AuthService {
         return AuthResponse.success(
                 "Login realizado com sucesso!",
                 new AuthResponse.UserData(user.getId(), user.getNome(), user.getEmail()));
+    }
+
+    @Transactional
+    public AuthResponse forgotPassword(ForgotPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException(request.getEmail()));
+
+        String code = String.format("%06d", secureRandom.nextInt(1_000_000));
+
+        user.setResetToken(passwordEncoder.encode(code));
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
+        userRepository.save(user);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("TrainEasy - Código de recuperação de senha");
+        message.setText("Olá " + user.getNome() + ",\n\n"
+                + "Seu código de recuperação de senha é: " + code + "\n\n"
+                + "Este código expira em 15 minutos.\n\n"
+                + "Se você não solicitou a recuperação, ignore este e-mail.\n\n"
+                + "Equipe TrainEasy");
+        mailSender.send(message);
+
+        return AuthResponse.success("Código de recuperação enviado para o e-mail.", null);
+    }
+
+    @Transactional
+    public AuthResponse resetPassword(ResetPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException(request.getEmail()));
+
+        if (user.getResetToken() == null || user.getResetTokenExpiry() == null) {
+            return AuthResponse.error("Nenhuma solicitação de recuperação encontrada.");
+        }
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            user.setResetToken(null);
+            user.setResetTokenExpiry(null);
+            userRepository.save(user);
+            return AuthResponse.error("Código expirado. Solicite um novo código.");
+        }
+
+        if (!passwordEncoder.matches(request.getCode(), user.getResetToken())) {
+            return AuthResponse.error("Código inválido.");
+        }
+
+        user.setSenha(passwordEncoder.encode(request.getNovaSenha()));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userRepository.save(user);
+
+        return AuthResponse.success("Senha alterada com sucesso!", null);
     }
 }

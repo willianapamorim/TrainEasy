@@ -72,6 +72,10 @@ export default function SignInScreen() {
             value={password}
             onChangeText={setPassword}
           />
+
+          <Link href="/(auth)/forgot-password" style={styles.forgotLink}>
+            Esqueceu a senha?
+          </Link>
         </View>
 
         {/* Botão Entrar */}
@@ -124,6 +128,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 40,
     gap: 16,
+  },
+  forgotLink: {
+    fontSize: 14,
+    color: COLORS.link,
+    fontWeight: "600",
+    textAlign: "right",
   },
   signUpContainer: {
     flexDirection: "row",
