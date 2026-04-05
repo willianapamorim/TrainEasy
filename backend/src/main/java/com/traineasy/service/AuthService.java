@@ -5,10 +5,6 @@ import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,17 +27,14 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
+    private final EmailService emailService;
     private final SecureRandom secureRandom = new SecureRandom();
 
-    @Value("${spring.mail.username:}")
-    private String mailFrom;
-
     public AuthService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-            JavaMailSender mailSender) {
+            EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mailSender = mailSender;
+        this.emailService = emailService;
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -85,19 +78,16 @@ public class AuthService {
         user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
         userRepository.save(user);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(mailFrom);
-        message.setTo(user.getEmail());
-        message.setSubject("TrainEasy - Código de recuperação de senha");
-        message.setText("Olá " + user.getNome() + ",\n\n"
+        String emailText = "Olá " + user.getNome() + ",\n\n"
                 + "Seu código de recuperação de senha é: " + code + "\n\n"
                 + "Este código expira em 15 minutos.\n\n"
                 + "Se você não solicitou a recuperação, ignore este e-mail.\n\n"
-                + "Equipe TrainEasy");
+                + "Equipe TrainEasy";
 
         try {
-            mailSender.send(message);
-        } catch (MailException e) {
+            emailService.sendEmail(user.getEmail(),
+                    "TrainEasy - Código de recuperação de senha", emailText);
+        } catch (Exception e) {
             log.error("Erro ao enviar email de recuperação: {}", e.getMessage(), e);
             return AuthResponse.error("Falha ao enviar e-mail. Tente novamente mais tarde.");
         }
