@@ -27,6 +27,11 @@
         "visible": "sticky-immersive"
       }
     },
+    "androidStatusBar": {
+      "translucent": true,
+      "backgroundColor": "transparent",
+      "barStyle": "light-content"
+    },
     "web": {
       "output": "static"
     },

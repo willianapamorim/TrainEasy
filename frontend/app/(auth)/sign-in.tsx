@@ -5,6 +5,7 @@ import { COLORS } from "@/src/constants/colors";
 import { loginUser } from "@/src/services/authService";
 import { saveUser } from "@/src/services/storage";
 import { Link, useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   Alert,
@@ -44,6 +45,7 @@ export default function SignInScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}

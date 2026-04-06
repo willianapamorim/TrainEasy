@@ -9,7 +9,7 @@ export const COLORS = {
   link: "#7C3AED",
 
   // Tela principal
-  dark: "#160d18",
+  dark: "#0e0e15",
   darkCard: "#292933",
   icon: "#737373",
   iconEdit: "#005376",

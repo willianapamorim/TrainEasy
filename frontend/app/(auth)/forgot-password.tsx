@@ -3,6 +3,7 @@ import { Input } from "@/src/components/Input";
 import { COLORS } from "@/src/constants/colors";
 import { forgotPassword, resetPassword } from "@/src/services/authService";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   Alert,
@@ -84,6 +85,7 @@ export default function ForgotPasswordScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
