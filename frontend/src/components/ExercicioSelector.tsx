@@ -10,13 +10,13 @@ import {
   Alert,
   FlatList,
   Modal,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface ExercicioSelectorProps {
   visible: boolean;
@@ -138,11 +138,16 @@ export function ExercicioSelector({
   }
 
   return (
-    <Modal visible={visible} animationType="slide" transparent={false}>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={false}
+      onRequestClose={onClose}
+    >
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} hitSlop={12}>
-            <MaterialIcons name="close" size={24} color={COLORS.white} />
+            <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
           </TouchableOpacity>
           <Text style={styles.title}>Selecionar Exercícios</Text>
           <TouchableOpacity onPress={handleConfirm} hitSlop={12}>
