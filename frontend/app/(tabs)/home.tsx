@@ -159,9 +159,12 @@ export default function HomeScreen() {
           <Text style={styles.tabLabel}>Metas</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.tabItem}>
-          <MaterialIcons name="calendar-today" size={28} color={COLORS.icon} />
-          <Text style={styles.tabLabel}>Calendário</Text>
+        <TouchableOpacity
+          style={styles.tabItem}
+          onPress={() => router.push("/(tabs)/historico" as never)}
+        >
+          <MaterialIcons name="history" size={28} color={COLORS.icon} />
+          <Text style={styles.tabLabel}>Histórico</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

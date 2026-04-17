@@ -2,7 +2,7 @@ import { COLORS } from "@/src/constants/colors";
 import { getStoredUser } from "@/src/services/storage";
 import {
   ExercicioData,
-  getRegistrosByExercicio,
+  getRegistrosHoje,
   registrarExercicio,
   RegistroData,
   updateRegistro,
@@ -57,7 +57,7 @@ export default function SessaoTreinoScreen() {
       const map: Record<number, RegistroData[]> = {};
       await Promise.all(
         exercicios.map(async (ex) => {
-          const res = await getRegistrosByExercicio(ex.id, user.id);
+          const res = await getRegistrosHoje(ex.id, user.id);
           map[ex.id] = res.success && res.registros ? res.registros : [];
         }),
       );
@@ -81,7 +81,7 @@ export default function SessaoTreinoScreen() {
     if (!user) return;
 
     setLoadingRegistros(true);
-    const response = await getRegistrosByExercicio(exercicioId, user.id);
+    const response = await getRegistrosHoje(exercicioId, user.id);
     const data =
       response.success && response.registros ? response.registros : [];
     setRegistros(data);

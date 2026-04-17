@@ -61,6 +61,10 @@ export interface RegistroResponse {
   registros: RegistroData[] | null;
 }
 
+export interface HistoricoData {
+  [date: string]: RegistroData[];
+}
+
 interface CreateTreinoPayload {
   nome: string;
   tipo: string;
@@ -195,6 +199,37 @@ export async function getRegistrosByExercicio(
     return data;
   } catch (error) {
     return handleRegistroError(error);
+  }
+}
+
+export async function getRegistrosHoje(
+  exercicioId: number,
+  userId: number,
+): Promise<RegistroResponse> {
+  try {
+    const { data } = await api.get<RegistroResponse>(
+      `/registros/exercicio/${exercicioId}/hoje?userId=${userId}`,
+    );
+    return data;
+  } catch (error) {
+    return handleRegistroError(error);
+  }
+}
+
+export interface HistoricoData {
+  [date: string]: RegistroData[];
+}
+
+export async function getHistorico(
+  userId: number,
+): Promise<{ success: boolean; data: HistoricoData }> {
+  try {
+    const { data } = await api.get<HistoricoData>(
+      `/registros/historico/${userId}`,
+    );
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, data: {} };
   }
 }
 

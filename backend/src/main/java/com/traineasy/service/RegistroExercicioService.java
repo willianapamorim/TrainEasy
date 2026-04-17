@@ -1,6 +1,12 @@
 package com.traineasy.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +82,32 @@ public class RegistroExercicioService {
 
         registroRepository.deleteById(id);
         return RegistroExercicioResponse.success("Registro excluído.", null);
+    }
+
+    public RegistroExercicioResponse getRegistrosHoje(Long exercicioId, Long userId) {
+        LocalDate hoje = LocalDate.now();
+        LocalDateTime inicio = hoje.atStartOfDay();
+        LocalDateTime fim = hoje.atTime(LocalTime.MAX);
+
+        List<RegistroExercicio> registros = registroRepository
+                .findByExercicioIdAndUserIdAndCreatedAtBetweenOrderByNumeroSerieAsc(exercicioId, userId, inicio, fim);
+
+        List<RegistroExercicioResponse.RegistroData> lista = registros.stream()
+                .map(this::toData)
+                .toList();
+
+        return RegistroExercicioResponse.successList("Registros de hoje carregados.", lista);
+    }
+
+    public Map<String, List<RegistroExercicioResponse.RegistroData>> getHistorico(Long userId) {
+        List<RegistroExercicio> registros = registroRepository.findByUserIdOrderByCreatedAtDesc(userId);
+
+        return registros.stream()
+                .map(this::toData)
+                .collect(Collectors.groupingBy(
+                        r -> r.getCreatedAt().toLocalDate().toString(),
+                        LinkedHashMap::new,
+                        Collectors.toList()));
     }
 
     private RegistroExercicioResponse.RegistroData toData(RegistroExercicio reg) {

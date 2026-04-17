@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const DEV_API_URL = "http://localhost:8080";
+const LOCAL_IP = "10.0.0.115";
+const DEV_API_URL = `http://${LOCAL_IP}:8080`;
 const PROD_API_URL = "https://traineasy-production.up.railway.app";
 
 const baseURL = __DEV__ ? DEV_API_URL : PROD_API_URL;

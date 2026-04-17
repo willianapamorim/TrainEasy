@@ -1,5 +1,8 @@
 package com.traineasy.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +44,21 @@ public class RegistroExercicioController {
             @RequestParam Long userId) {
         RegistroExercicioResponse response = registroService.getRegistrosByExercicio(exercicioId, userId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/exercicio/{exercicioId}/hoje")
+    public ResponseEntity<RegistroExercicioResponse> getByExercicioHoje(
+            @PathVariable Long exercicioId,
+            @RequestParam Long userId) {
+        RegistroExercicioResponse response = registroService.getRegistrosHoje(exercicioId, userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/historico/{userId}")
+    public ResponseEntity<Map<String, List<RegistroExercicioResponse.RegistroData>>> getHistorico(
+            @PathVariable Long userId) {
+        Map<String, List<RegistroExercicioResponse.RegistroData>> historico = registroService.getHistorico(userId);
+        return ResponseEntity.ok(historico);
     }
 
     @PutMapping("/{id}")
