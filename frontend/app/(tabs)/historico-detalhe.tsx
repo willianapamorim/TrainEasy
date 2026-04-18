@@ -189,9 +189,21 @@ export default function HistoricoDetalheScreen() {
               {isActive && (
                 <View style={styles.expandedContent}>
                   <View style={styles.registrosSection}>
-                    <Text style={styles.registrosSectionTitle}>
-                      Séries registradas
-                    </Text>
+                    <View style={styles.registrosHeader}>
+                      <Text style={styles.registrosSectionTitle}>
+                        Séries registradas
+                      </Text>
+                      <View style={styles.editHint}>
+                        <MaterialIcons
+                          name="edit"
+                          size={12}
+                          color={COLORS.icon}
+                        />
+                        <Text style={styles.editHintText}>
+                          toque para editar
+                        </Text>
+                      </View>
+                    </View>
                     {group.registros.map((reg) => (
                       <View key={reg.id} style={styles.registroRow}>
                         <View style={styles.serieCircle}>
@@ -348,11 +360,26 @@ const styles = StyleSheet.create({
   registrosSection: {
     gap: 8,
   },
+  registrosHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
+  },
   registrosSectionTitle: {
     fontSize: 13,
     fontWeight: "600",
     color: COLORS.icon,
-    marginBottom: 4,
+  },
+  editHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    opacity: 0.6,
+  },
+  editHintText: {
+    fontSize: 11,
+    color: COLORS.icon,
   },
   registroRow: {
     flexDirection: "row",

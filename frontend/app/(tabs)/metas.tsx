@@ -93,11 +93,7 @@ function MetaItem({
 
   return (
     <View style={styles.metaCard}>
-      <TouchableOpacity
-        style={styles.checkArea}
-        onPress={onToggle}
-        hitSlop={8}
-      >
+      <TouchableOpacity style={styles.checkArea} onPress={onToggle} hitSlop={8}>
         <MaterialIcons
           name={item.concluida ? "check-circle" : "radio-button-unchecked"}
           size={26}
