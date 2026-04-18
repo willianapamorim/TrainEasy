@@ -154,7 +154,10 @@ export default function HomeScreen() {
           <Text style={styles.tabLabel}>Vídeos</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.tabItem}>
+        <TouchableOpacity
+          style={styles.tabItem}
+          onPress={() => router.push("/(tabs)/metas" as never)}
+        >
           <MaterialIcons name="flag" size={28} color={COLORS.icon} />
           <Text style={styles.tabLabel}>Metas</Text>
         </TouchableOpacity>

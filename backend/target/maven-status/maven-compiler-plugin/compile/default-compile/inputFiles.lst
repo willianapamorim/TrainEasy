@@ -1,6 +1,7 @@
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\config\CorsConfig.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\config\SecurityConfig.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\controller\AuthController.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\controller\MetaController.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\controller\RegistroExercicioController.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\controller\TreinoController.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\controller\UserController.java
@@ -9,6 +10,8 @@ C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\CreateTreinoRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\ForgotPasswordRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\LoginRequest.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\MetaRequest.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\MetaResponse.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\RegisterRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\RegistroExercicioRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\RegistroExercicioResponse.java
@@ -18,6 +21,7 @@ C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\dto\UpdateUserRequest.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\entity\DivisaoTreino.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\entity\Exercicio.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\entity\Meta.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\entity\RegistroExercicio.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\entity\Treino.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\entity\User.java
@@ -27,11 +31,13 @@ C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\exception\UserNotFoundException.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\repository\DivisaoTreinoRepository.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\repository\ExercicioRepository.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\repository\MetaRepository.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\repository\RegistroExercicioRepository.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\repository\TreinoRepository.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\repository\UserRepository.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\service\AuthService.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\service\EmailService.java
+C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\service\MetaService.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\service\RegistroExercicioService.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\service\TreinoService.java
 C:\Users\willi\Documents\TCC\TrainEasy\TrainEasy\TrainEasy\backend\src\main\java\com\traineasy\service\UserService.java
