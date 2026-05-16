@@ -216,10 +216,6 @@ export async function getRegistrosHoje(
   }
 }
 
-export interface HistoricoData {
-  [date: string]: RegistroData[];
-}
-
 export async function getHistorico(
   userId: number,
 ): Promise<{ success: boolean; data: HistoricoData }> {

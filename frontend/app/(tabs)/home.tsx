@@ -145,7 +145,10 @@ export default function HomeScreen() {
 
       {/* Bottom Menu */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.tabItem}>
+        <TouchableOpacity
+          style={styles.tabItem}
+          onPress={() => router.push("/(tabs)/videos" as never)}
+        >
           <MaterialIcons
             name="play-circle-outline"
             size={28}

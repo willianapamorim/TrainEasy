@@ -1,0 +1,71 @@
+ARQUITETURA DO BANCO DE DADOS - TRAINEASY
+
+ENTIDADES EXISTENTES:
+
+1. User (users)
+   - Armazena dados dos usuários da aplicação
+   - Campos: id (PK), nome, email (único), senha, resetToken, resetTokenExpiry
+   - Relacionamentos: possui vários Treinos, Metas e RegistroExercicio
+
+2. Treino (treinos)
+   - Representa um plano de treino criado pelo usuário
+   - Campos: id (PK), nome, tipo (PREDEFINIDO/PERSONALIZADO), user_id (FK), createdAt
+   - Relacionamentos: pertence a um User, possui várias DivisaoTreino
+
+3. DivisaoTreino (divisoes_treino)
+   - Representa uma divisão do treino (ex: Treino A, B, C)
+   - Campos: id (PK), nome, treino_id (FK)
+   - Relacionamentos: pertence a um Treino, possui vários Exercicio
+
+4. Exercicio (exercicios)
+   - Representa um exercício específico dentro de uma divisão
+   - Campos: id (PK), nome, divisao_id (FK)
+   - Relacionamentos: pertence a uma DivisaoTreino, possui vários RegistroExercicio
+
+5. RegistroExercicio (registros_exercicio)
+   - Armazena o histórico de execução de exercícios pelo usuário
+   - Campos: id (PK), exercicio_id (FK), user_id (FK), carga, repeticoes, numeroSerie, createdAt
+   - Relacionamentos: pertence a um Exercicio e a um User
+
+6. Meta (metas)
+   - Armazena metas/objetivos definidos pelo usuário
+   - Campos: id (PK), titulo, descricao, concluida, user_id (FK), createdAt
+   - Relacionamentos: pertence a um User
+
+
+7. VideoExercicio (videos_exercicio)
+   - Armazena vídeos demonstrativos de exercícios acessíveis em uma aba separada da home
+   - Campos: 
+     * id (PK)
+     * titulo
+     * descricao
+     * urlVideo (URL do vídeo - YouTube, Vimeo, etc)
+     * thumbnailUrl (URL da miniatura/thumbnail)
+     * duracao (em segundos)
+     * grupoMuscular (peito, costas, pernas, ombros, etc)
+     * nivelDificuldade (INICIANTE, INTERMEDIARIO, AVANCADO)
+     * visualizacoes (contador de views)
+     * createdAt
+   
+   - Relacionamentos: 
+     * Entidade independente sem FK direta com outras tabelas
+     * Pode ser consumida por qualquer usuário logado
+     * Futuramente pode ter relação N:N com Exercicio (tabela exercicio_video)
+
+
+FLUXO DA APLICAÇÃO:
+
+User → cria Treinos → cada Treino tem DivisaoTreino → cada DivisaoTreino tem Exercicios → execução gera RegistroExercicio
+
+User → define Metas independentes
+
+User → acessa VideoExercicio para ver demonstrações (aba separada acessada pela home)
+
+
+CHAVES ESTRANGEIRAS:
+- Treino.user_id → User.id
+- DivisaoTreino.treino_id → Treino.id
+- Exercicio.divisao_id → DivisaoTreino.id
+- RegistroExercicio.exercicio_id → Exercicio.id
+- RegistroExercicio.user_id → User.id
+- Meta.user_id → User.id

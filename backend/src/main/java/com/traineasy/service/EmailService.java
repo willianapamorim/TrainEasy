@@ -24,7 +24,11 @@ public class EmailService {
     @Value("${resend.from:TrainEasy <onboarding@resend.dev>}")
     private String from;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+
+    public EmailService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public void sendEmail(String to, String subject, String text) {
         if (apiKey == null || apiKey.isBlank()) {
