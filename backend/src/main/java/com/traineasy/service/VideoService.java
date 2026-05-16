@@ -7,6 +7,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,6 +34,8 @@ import com.traineasy.dto.VideoResponse;
 @Service
 public class VideoService {
 
+    private static final Logger log = LoggerFactory.getLogger(VideoService.class);
+
     private static final String ROOT_FOLDER = "videos";
 
     /** Transformação Cloudinary para gerar thumbnail a partir do vídeo */
@@ -52,6 +56,8 @@ public class VideoService {
         try {
             String url = cloudinaryConfig.getAdminApiBaseUrl()
                     + "/folders/" + ROOT_FOLDER;
+
+            log.info("Listando categorias: {}", url);
 
             ResponseEntity<Map> response = restTemplate.exchange(
                     url, HttpMethod.GET, authEntity(), Map.class);
@@ -76,35 +82,43 @@ public class VideoService {
 
             return VideoResponse.successCategorias("Categorias carregadas.", categorias);
         } catch (Exception e) {
+            log.error("Erro ao listar categorias: {}", e.getMessage(), e);
             return VideoResponse.error("Erro ao carregar categorias: " + e.getMessage());
         }
     }
 
     /**
      * Lista todos os vídeos de uma categoria específica.
+     * Usa a Resources API com prefix para buscar vídeos na pasta.
      */
     public VideoResponse listarVideosPorCategoria(String categoria) {
         try {
-            String folderPath = ROOT_FOLDER + "/" + categoria;
-
-            // Usa a Search API para buscar vídeos na pasta
-            String searchExpression = "folder:\"" + folderPath + "\" AND resource_type:video";
-            String encodedExpression = URLEncoder.encode(searchExpression, StandardCharsets.UTF_8);
+            String prefix = ROOT_FOLDER + "/" + categoria + "/";
+            String encodedPrefix = URLEncoder.encode(prefix, StandardCharsets.UTF_8);
 
             String url = cloudinaryConfig.getAdminApiBaseUrl()
-                    + "/resources/search?expression=" + encodedExpression
+                    + "/resources/video/upload"
+                    + "?prefix=" + encodedPrefix
+                    + "&type=upload"
                     + "&max_results=100";
+
+            log.info("Listando vídeos da categoria '{}': {}", categoria, url);
 
             ResponseEntity<Map> response = restTemplate.exchange(
                     url, HttpMethod.GET, authEntity(), Map.class);
 
             Map<String, Object> body = response.getBody();
+
+            log.info("Response body keys: {}", body != null ? body.keySet() : "null");
+
             if (body == null || !body.containsKey("resources")) {
                 return VideoResponse.successVideos("Nenhum vídeo encontrado.", List.of());
             }
 
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> resources = (List<Map<String, Object>>) body.get("resources");
+
+            log.info("Encontrados {} recursos na categoria '{}'", resources.size(), categoria);
 
             List<VideoDTO> videos = new ArrayList<>();
 
@@ -127,34 +141,56 @@ public class VideoService {
 
             return VideoResponse.successVideos("Vídeos carregados.", videos);
         } catch (Exception e) {
+            log.error("Erro ao listar vídeos da categoria '{}': {}", categoria, e.getMessage(), e);
             return VideoResponse.error("Erro ao carregar vídeos: " + e.getMessage());
         }
     }
 
     /**
-     * Conta o número de vídeos em uma pasta usando a Admin API.
+     * Conta o número de vídeos em uma pasta usando a Resources API com prefix.
      */
     private int contarVideosPorPasta(String folderPath) {
         try {
-            String searchExpression = "folder:\"" + folderPath + "\" AND resource_type:video";
-            String encodedExpression = URLEncoder.encode(searchExpression, StandardCharsets.UTF_8);
+            String prefix = folderPath + "/";
+            String encodedPrefix = URLEncoder.encode(prefix, StandardCharsets.UTF_8);
 
             String url = cloudinaryConfig.getAdminApiBaseUrl()
-                    + "/resources/search?expression=" + encodedExpression
+                    + "/resources/video/upload"
+                    + "?prefix=" + encodedPrefix
                     + "&max_results=0";
 
             ResponseEntity<Map> response = restTemplate.exchange(
                     url, HttpMethod.GET, authEntity(), Map.class);
 
             Map<String, Object> body = response.getBody();
-            if (body != null && body.containsKey("total_count")) {
-                Object total = body.get("total_count");
-                if (total instanceof Number) {
-                    return ((Number) total).intValue();
-                }
+
+            // A Resources API retorna os resources, não total_count
+            // Precisamos contar os resources retornados
+            if (body != null && body.containsKey("resources")) {
+                @SuppressWarnings("unchecked")
+                List<?> resources = (List<?>) body.get("resources");
+                return resources.size();
             }
+
+            // Fallback: tentar com max_results=500 para contagem
+            url = cloudinaryConfig.getAdminApiBaseUrl()
+                    + "/resources/video/upload"
+                    + "?prefix=" + encodedPrefix
+                    + "&max_results=500";
+
+            response = restTemplate.exchange(
+                    url, HttpMethod.GET, authEntity(), Map.class);
+
+            body = response.getBody();
+            if (body != null && body.containsKey("resources")) {
+                @SuppressWarnings("unchecked")
+                List<?> resources = (List<?>) body.get("resources");
+                return resources.size();
+            }
+
             return 0;
         } catch (Exception e) {
+            log.warn("Erro ao contar vídeos em '{}': {}", folderPath, e.getMessage());
             return 0;
         }
     }
