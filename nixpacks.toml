@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["jdk17", "maven"]
+nixPkgs = ["jdk17", "maven", "unzip"]
 
 [phases.build]
 cmds = ["cd backend && mvn clean package -DskipTests"]
