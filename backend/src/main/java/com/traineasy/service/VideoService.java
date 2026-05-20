@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,9 @@ public class VideoService {
 
     private static final Logger log = LoggerFactory.getLogger(VideoService.class);
 
+    private static final ParameterizedTypeReference<Map<String, Object>> MAP_TYPE = new ParameterizedTypeReference<Map<String, Object>>() {
+    };
+
     private static final String ROOT_FOLDER = "videos";
 
     /** Transformação Cloudinary para gerar thumbnail a partir do vídeo */
@@ -47,9 +51,9 @@ public class VideoService {
     public VideoResponse listarCategorias() {
         try {
             String url = cloudinaryConfig.getAdminApiBaseUrl() + "/folders/" + ROOT_FOLDER;
-            
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    url, HttpMethod.GET, authEntity(), Map.class);
+
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    url, HttpMethod.GET, authEntity(), MAP_TYPE);
 
             Map<String, Object> body = response.getBody();
             if (body == null || !body.containsKey("folders")) {
@@ -82,19 +86,20 @@ public class VideoService {
     public VideoResponse listarVideosPorCategoria(String categoria) {
         try {
             String folderPath = ROOT_FOLDER + "/" + categoria;
-            
-            // Usamos a Search API com um JSON no body para evitar problemas de encoding na URL
+
+            // Usamos a Search API com um JSON no body para evitar problemas de encoding na
+            // URL
             String url = cloudinaryConfig.getAdminApiBaseUrl() + "/resources/search";
-            
+
             Map<String, Object> searchRequest = Map.of(
-                "expression", "folder:\"" + folderPath + "\"",
-                "max_results", 100
-            );
+                    "expression", "folder:\"" + folderPath + "\"",
+                    "max_results", 100);
 
             HttpHeaders headers = createHeaders();
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(searchRequest, headers);
 
-            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(url, HttpMethod.POST, entity,
+                    MAP_TYPE);
             Map<String, Object> body = response.getBody();
 
             if (body == null || !body.containsKey("resources")) {
@@ -116,11 +121,10 @@ public class VideoService {
                 }
 
                 videos.add(new VideoDTO(
-                    nomeExercicio, 
-                    categoria, 
-                    gerarVideoUrl(publicId, format), 
-                    gerarThumbnailUrl(publicId)
-                ));
+                        nomeExercicio,
+                        categoria,
+                        gerarVideoUrl(publicId, format),
+                        gerarThumbnailUrl(publicId)));
             }
 
             return VideoResponse.successVideos("Vídeos carregados.", videos);
@@ -134,13 +138,13 @@ public class VideoService {
         try {
             String url = cloudinaryConfig.getAdminApiBaseUrl() + "/resources/search";
             Map<String, Object> searchRequest = Map.of(
-                "expression", "folder:\"" + folderPath + "\"",
-                "max_results", 1
-            );
+                    "expression", "folder:\"" + folderPath + "\"",
+                    "max_results", 1);
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(searchRequest, createHeaders());
-            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
-            
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(url, HttpMethod.POST, entity,
+                    MAP_TYPE);
+
             Map<String, Object> body = response.getBody();
             if (body != null && body.containsKey("total_count")) {
                 return ((Number) body.get("total_count")).intValue();
@@ -152,11 +156,13 @@ public class VideoService {
     }
 
     private String gerarVideoUrl(String publicId, String format) {
-        return cloudinaryConfig.getDeliveryBaseUrl() + "/video/upload/" + publicId + "." + (format != null ? format : "mp4");
+        return cloudinaryConfig.getDeliveryBaseUrl() + "/video/upload/" + publicId + "."
+                + (format != null ? format : "mp4");
     }
 
     private String gerarThumbnailUrl(String publicId) {
-        return cloudinaryConfig.getDeliveryBaseUrl() + "/video/upload/" + THUMB_TRANSFORMATION + "/" + publicId + ".jpg";
+        return cloudinaryConfig.getDeliveryBaseUrl() + "/video/upload/" + THUMB_TRANSFORMATION + "/" + publicId
+                + ".jpg";
     }
 
     private HttpHeaders createHeaders() {
